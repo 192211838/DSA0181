@@ -1,0 +1,119 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+// Structure to represent a ticket
+struct Ticket {
+    int id;
+    string event;
+    string date;
+    double price;
+    bool isBooked;
+};
+
+// Class for the Ticket Booking System
+class TicketBookingSystem {
+private:
+    vector<Ticket> tickets;
+    vector<Ticket> bookingHistory;
+
+public:
+    // Constructor to initialize some sample tickets
+    TicketBookingSystem() {
+        tickets = {
+            {1, "Concert: Coldplay", "2025-01-10", 150.0, false},
+            {2, "Movie: Avengers", "2025-01-12", 12.0, false},
+            {3, "Play: Hamlet", "2025-01-15", 30.0, false},
+            {4, "Football Match: Final", "2025-01-20", 75.0, false}
+        };
+    }
+
+    // Display available tickets
+    void viewAvailableTickets() {
+        cout << "\nAvailable Tickets:\n";
+        cout << left << setw(5) << "ID" << setw(25) << "Event" << setw(15) << "Date" << setw(10) << "Price" << endl;
+        cout << string(55, '-') << endl;
+
+        for (const auto &ticket : tickets) {
+            if (!ticket.isBooked) {
+                cout << left << setw(5) << ticket.id << setw(25) << ticket.event
+                     << setw(15) << ticket.date << "$" << ticket.price << endl;
+            }
+        }
+    }
+
+    // Book a ticket
+    void bookTicket() {
+        int ticketId;
+        cout << "\nEnter the Ticket ID to book: ";
+        cin >> ticketId;
+
+        for (auto &ticket : tickets) {
+            if (ticket.id == ticketId && !ticket.isBooked) {
+                ticket.isBooked = true;
+                bookingHistory.push_back(ticket);
+                cout << "Ticket for " << ticket.event << " booked successfully!" << endl;
+                return;
+            }
+        }
+
+        cout << "Invalid Ticket ID or the ticket is already booked.\n";
+    }
+
+    // Display booking history
+    void viewBookingHistory() {
+        if (bookingHistory.empty()) {
+            cout << "\nNo tickets booked yet.\n";
+            return;
+        }
+
+        cout << "\nBooking History:\n";
+        cout << left << setw(5) << "ID" << setw(25) << "Event" << setw(15) << "Date" << setw(10) << "Price" << endl;
+        cout << string(55, '-') << endl;
+
+        for (const auto &ticket : bookingHistory) {
+            cout << left << setw(5) << ticket.id << setw(25) << ticket.event
+                 << setw(15) << ticket.date << "$" << ticket.price << endl;
+        }
+    }
+
+    // Display menu
+    void menu() {
+        int choice;
+        do {
+            cout << "\n--- Ticket Booking System ---\n";
+            cout << "1. View Available Tickets\n";
+            cout << "2. Book a Ticket\n";
+            cout << "3. View Booking History\n";
+            cout << "4. Exit\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    viewAvailableTickets();
+                    break;
+                case 2:
+                    bookTicket();
+                    break;
+                case 3:
+                    viewBookingHistory();
+                    break;
+                case 4:
+                    cout << "Exiting the system. Thank you!\n";
+                    break;
+                default:
+                    cout << "Invalid choice. Please try again.\n";
+            }
+        } while (choice != 4);
+    }
+};
+
+// Main function
+int main() {
+    TicketBookingSystem system;
+    system.menu();
+    return 0;
+}
